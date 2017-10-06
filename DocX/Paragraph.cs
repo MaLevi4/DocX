@@ -616,6 +616,54 @@ namespace Novacode
             }
         }
 
+        private float indentationLeft;
+        /// <summary>
+        /// Get or set the left indentation of lines of this Paragraph.
+        /// </summary>
+        /// <example>
+        /// Indent from left all lines of a Paragraph.
+        /// <code>
+        /// // Create a new document.
+        /// using (DocX document = DocX.Create("Test.docx"))
+        /// {
+        ///     // Create a new Paragraph.
+        ///     Paragraph p = document.InsertParagraph("Line 1\nLine 2\nLine 3");
+        ///
+        ///     // Indent from left all lines of a Paragraph.
+        ///     p.IndentationLeft = 2.0f;
+        ///
+        ///     // Save all changes made to this document.
+        ///     document.Save();
+        /// }
+        /// </code>
+        /// </example>
+        public float IndentationLeft {
+            get {
+                GetOrCreate_pPr();
+                XElement ind = GetOrCreate_pPr_ind();
+                XAttribute left = ind.Attribute(XName.Get("left", DocX.w.NamespaceName));
+
+                if (left != null)
+                    return float.Parse(left.Value);
+
+                return 0.0f;
+            }
+
+            set {
+                indentationLeft = value;
+
+                XElement pPr = GetOrCreate_pPr();
+                XElement ind = GetOrCreate_pPr_ind();
+
+                string indentation = ((int)((indentationLeft / 0.1) * 57)).ToString();
+                XAttribute left = ind.Attribute(XName.Get("left", DocX.w.NamespaceName));
+                if (left != null)
+                    left.Value = indentation;
+                else
+                    ind.Add(new XAttribute(XName.Get("left", DocX.w.NamespaceName), indentation));
+            }
+        }
+
         private float indentationHanging;
         /// <summary>
         /// Get or set the indentation of all but the first line of this Paragraph.
