@@ -904,6 +904,16 @@ namespace Novacode
             return t;
         }
 
+
+        public List InsertListAfterSelf(List l) {
+            l.Items.Reverse();
+            foreach (var item in l.Items) {
+                Xml.AddAfterSelf(item.Xml);
+            }
+            return l;
+        }
+
+
         /// <summary>
         /// Insert a new Table into this document after this Paragraph.
         /// </summary>
